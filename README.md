@@ -1,2 +1,2 @@
 # apiempresas
-Projeto API .NET 6 EntityFramework 
+Projeto API .NET 6 + Entity Framework 
