@@ -17,6 +17,9 @@ AutoMapperConfiguration.AddAutoMapper(builder);
 //Adicionando a configuração do JWT
 JwtConfiguration.AddJwt(builder);
 
+//Adicionando a configuração do Email
+MailConfiguration.AddMail(builder);
+
 builder.Services.AddCors(s => s.AddPolicy("DefaultPolicy", builder => {
     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 }));

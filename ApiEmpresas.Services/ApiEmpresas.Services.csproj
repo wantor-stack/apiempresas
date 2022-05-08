@@ -9,12 +9,14 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ApiEmpresas.Infra.Data\ApiEmpresas.Infra.Data.csproj" />
+    <ProjectReference Include="..\ApiEmpresas.Messages\ApiEmpresas.Messages.csproj" />
   </ItemGroup>
 
 </Project>
