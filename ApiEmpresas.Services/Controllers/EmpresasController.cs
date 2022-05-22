@@ -14,11 +14,9 @@ namespace ApiEmpresas.Services.Controllers
     [ApiController]
     public class EmpresasController : ControllerBase
     {
-        //atributo
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        //construtor para injeção de dependência
         public EmpresasController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -30,26 +28,20 @@ namespace ApiEmpresas.Services.Controllers
         {
             try
             {
-                //verificar se o CNPJ informado já está cadastrado..
                 if (_unitOfWork.EmpresaRepository.ObterPorCnpj(request.Cnpj) != null)
-                    //HTTP 422 -> UNPROCESSABLE ENTITY
                     return StatusCode(422, new { message = "O CNPJ informado já está cadastrado." });
 
                 var empresa = _mapper.Map<Empresa>(request);
                 empresa.IdEmpresa = Guid.NewGuid();
 
-                //gravar no banco de dados
                 _unitOfWork.EmpresaRepository.Inserir(empresa);
 
                 var response = _mapper.Map<EmpresaResponse>(empresa);
 
-                //HTTP 201 -> SUCCESS CREATED
                 return StatusCode(201, response);
             }
             catch (Exception e)
             {
-                //retornando status e mensagem de erro
-                //HTTP 500 -> ERRO INTERNO DE SERVIDOR
                 return StatusCode(500, e.Message);
             }
         }
@@ -59,33 +51,24 @@ namespace ApiEmpresas.Services.Controllers
         {
             try
             {
-                //pesquisando a empresa atraves do id..
                 var empresa = _unitOfWork.EmpresaRepository.ObterPorId(request.IdEmpresa);
 
-                //verificando se a empresa não foi encontrada
                 if (empresa == null)
-                    //HTTP 422 -> UNPROCESSABLE ENTITY
                     return StatusCode(422, new { message = "Empresa não encontrada, verifique o ID informado." });
 
-                //verificando se o cnpj informado ja está cadastrado para outra empresa
                 var registro = _unitOfWork.EmpresaRepository.ObterPorCnpj(request.Cnpj);
                 if (registro != null && registro.IdEmpresa != empresa.IdEmpresa)
-                    //HTTP 422 -> UNPROCESSABLE ENTITY
                     return StatusCode(422, new { message = "O CNPJ informado já está cadastrado para outra empresa." });
 
-                //atualizando os dados da empresa
-                empresa = _mapper.Map<Empresa>(request);
+                _mapper.Map(request, empresa);
 
                 _unitOfWork.EmpresaRepository.Alterar(empresa);
 
                 var response = _mapper.Map<EmpresaResponse>(empresa);
-
                 return StatusCode(200, response);
             }
             catch (Exception e)
             {
-                //retornando status e mensagem de erro
-                //HTTP 500 -> ERRO INTERNO DE SERVIDOR
                 return StatusCode(500, e.Message);
             }
         }
@@ -95,25 +78,18 @@ namespace ApiEmpresas.Services.Controllers
         {
             try
             {
-                //pesquisando a empresa atraves do id..
                 var empresa = _unitOfWork.EmpresaRepository.ObterPorId(idEmpresa);
 
-                //verificando se a empresa não foi encontrada
                 if (empresa == null)
-                    //HTTP 422 -> UNPROCESSABLE ENTITY
                     return StatusCode(422, new { message = "Empresa não encontrada, verifique o ID informado." });
 
-                //excluindo a empresa
                 _unitOfWork.EmpresaRepository.Excluir(empresa);
 
                 var response = _mapper.Map<EmpresaResponse>(empresa);
-
                 return StatusCode(200, response);
             }
             catch (Exception e)
             {
-                //retornando status e mensagem de erro
-                //HTTP 500 -> ERRO INTERNO DE SERVIDOR
                 return StatusCode(500, e.Message);
             }
         }
@@ -124,7 +100,6 @@ namespace ApiEmpresas.Services.Controllers
             try
             {
                 var empresas = _unitOfWork.EmpresaRepository.Consultar();
-
                 var lista = _mapper.Map<List<EmpresaResponse>>(empresas);
 
                 if (lista.Count > 0)
@@ -134,8 +109,6 @@ namespace ApiEmpresas.Services.Controllers
             }
             catch (Exception e)
             {
-                //retornando status e mensagem de erro
-                //HTTP 500 -> ERRO INTERNO DE SERVIDOR
                 return StatusCode(500, e.Message);
             }
         }
@@ -145,14 +118,11 @@ namespace ApiEmpresas.Services.Controllers
         {
             try
             {
-                //buscar a empresa no repositorio atraves do id
                 var empresa = _unitOfWork.EmpresaRepository.ObterPorId(idEmpresa);
 
-                //verificar se a empresa foi encontrada
                 if (empresa != null)
                 {
                     var response = _mapper.Map<EmpresaResponse>(empresa);
-
                     return StatusCode(200, response);
                 }
                 else
@@ -162,8 +132,6 @@ namespace ApiEmpresas.Services.Controllers
             }
             catch (Exception e)
             {
-                //retornando status e mensagem de erro
-                //HTTP 500 -> ERRO INTERNO DE SERVIDOR
                 return StatusCode(500, e.Message);
             }
         }

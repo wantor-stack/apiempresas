@@ -75,7 +75,7 @@ namespace ApiEmpresas.Services.Controllers
                 if (empresa == null)
                     return StatusCode(422, new { message = "A Empresa informada não está cadastrada." });
 
-                funcionario = _mapper.Map<Funcionario>(request);
+                _mapper.Map(request, funcionario);
                 _unitOfWork.FuncionarioRepository.Alterar(funcionario);
 
                 var response = _mapper.Map<FuncionarioResponse>(funcionario);
